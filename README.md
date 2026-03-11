@@ -7,6 +7,5 @@ Source code for the CowboyHatVR website.
 
 ## Live site
 
-Hosted on Cloudflare Pages:
-`https://cowboyhatvr.pages.dev`
+[Visit my website](https://cowboyhatvr.pages.dev)
 
