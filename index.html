@@ -1,166 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CowboyHatVR</title>
-<link rel="icon" href="favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CowboyHatVR</title>
+  <link rel="icon" href="favicon.png">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#0a0f1a;
-  color:#fff;
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-/* TOPBAR */
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:12px;
-  background:rgba(10,15,30,0.9);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,0.08);
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(70, 110, 255, 0.18), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(255, 90, 120, 0.12), transparent 35%),
+        #0a0f1a;
+      color: #eef4ff;
+    }
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      min-height: 64px;
+      padding: 12px 16px;
+      background: rgba(8, 12, 24, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
 
-.logo img{
-  width:32px;
-  height:32px;
-  border-radius:8px;
-}
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
 
-.logo span{
-  font-weight:bold;
-  letter-spacing:1px;
-}
+    .menu-btn {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      border-radius: 12px;
+      font-size: 22px;
+      cursor: pointer;
+    }
 
-.top-actions{
-  display:flex;
-  gap:10px;
-}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
 
-.btn{
-  padding:8px 12px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.1);
-  background:rgba(255,255,255,0.05);
-  color:#fff;
-  text-decoration:none;
-  font-size:14px;
-}
+    .brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
 
-.btn:hover{
-  background:rgba(255,255,255,0.1);
-}
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
 
-/* MENU */
-.menu-btn{
-  font-size:20px;
-  cursor:pointer;
-  padding:6px;
-}
+    .brand-text strong {
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.dropdown{
-  position:fixed;
-  top:0;
-  left:0;
-  width:240px;
-  height:100%;
-  background:#0f1724;
-  transform:translateX(-100%);
-  transition:0.3s;
-  padding:20px;
-  z-index:200;
-}
+    .brand-text span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.dropdown.open{
-  transform:translateX(0);
-}
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
 
-.dropdown a{
-  display:block;
-  margin-bottom:15px;
-  text-decoration:none;
-  color:#fff;
-  padding:10px;
-  border-radius:8px;
-  background:rgba(255,255,255,0.05);
-}
-
-.dropdown a:hover{
-  background:rgba(255,255,255,0.1);
-}
-
-/* CONTENT */
-.container{
-  padding:20px;
-}
-
-.card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:16px;
-  padding:20px;
-  margin-bottom:20px;
-}
-
-.profile{
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
-.profile img{
-  width:70px;
-  height:70px;
-  border-radius:50%;
-}
-
-.profile h2{
-  margin:0;
-}
-
-/* BOTTOM */
-.bottom{
-  padding:20px;
-  text-align:center;
-  border-top:1px solid rgba(255,255,255,0.08);
-  margin-top:40px;
-}
-
-.bottom a{
-  display:inline-block;
-  margin:8px;
-  padding:10px 14px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.06);
-  text-decoration:none;
-  color:#fff;
-}
-
-.bottom a:hover{
-  background:rgba(255,255,255,0.12);
-}
-</style>
-</head>
-
-<body>
-
-<div class="dropdown" id="menu">
-  <a href="https://discord.gg/Qsp7Hfq6A">Main Discord</a>
-  <a href="https://discord.gg/csty99p5AS">Clan Server</a>
-</div>
-
-<div class="top
+    .top-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
