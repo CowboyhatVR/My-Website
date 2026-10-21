@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#e5f5ff">
-<meta name="description" content="CowboyHatVR: Minecraft, Donut SMP, builds and creative projects. Watch my videos and join the community.">
-<title>CowboyHatVR | Minecraft & creative projects</title>
+<meta name="description" content="Minecraft, Donut SMP and Gorilla Tag with CowboyHatVR. Farms, schematics, VR maps and videos. Find my channels and join the community.">
+<title>CowboyHatVR | Minecraft, Donut SMP & VR</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <style>
 :root{--ink:#18394d;--muted:#496879;--blue:#126a9f;--line:#c9e2ee;--white:#fff}
@@ -80,6 +80,39 @@ section{padding:45px 0}.grid,.social-grid{grid-template-columns:1fr}.card{paddin
 .footer-inner{flex-direction:column;gap:6px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+
+/* Open, editorial sections with space for future original character artwork. */
+.hero{display:block;min-height:0;padding:110px 0 92px}
+.hero-copy{max-width:850px}
+h1{font-size:clamp(48px,7.8vw,94px);letter-spacing:-4px;line-height:1.04}
+.hero .lead{max-width:640px;font-size:20px}
+.interests{display:flex;flex-wrap:wrap;gap:18px 36px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;letter-spacing:1.8px;font-weight:700;color:var(--muted)}
+.story{display:grid;grid-template-columns:180px minmax(0,1fr);gap:65px;padding-top:20px;padding-bottom:20px}
+.section-label{display:flex;align-items:baseline;gap:16px}
+.section-label>span{font-size:12px;color:var(--muted)}
+.story h2{font-size:clamp(32px,4.5vw,52px);line-height:1.14;margin-bottom:26px}
+.story h2 span{color:var(--blue)}
+.story p:not(.eyebrow){max-width:690px;color:var(--muted)}
+.story .story-lead{font-size:21px;color:var(--ink);line-height:1.6}
+.topic-list{display:grid;grid-template-columns:1fr 1fr;gap:32px;border-top:1px solid var(--line);padding-top:16px;margin:30px 0}
+.topic-list h3{font-size:18px}
+.topic-list p{font-size:15px}
+.text-link{display:inline-block;color:var(--blue);font-size:15px;font-weight:700;text-underline-offset:6px;margin-top:10px}
+.vr-story{border-top:1px solid var(--line);padding-top:65px}
+@media(max-width:760px){
+.hero{padding:66px 0 48px}
+h1{font-size:clamp(40px,10.4vw,72px);letter-spacing:-2px;overflow-wrap:anywhere}
+.hero .lead{font-size:17px}
+.interests{gap:12px 23px;font-size:10px}
+.story{grid-template-columns:1fr;gap:12px;padding-top:6px;padding-bottom:6px}
+.section-label .eyebrow{margin-bottom:4px}
+.story .story-lead{font-size:19px}
+.story h2{font-size:34px}
+.topic-list{grid-template-columns:1fr;gap:4px;margin:24px 0}
+.vr-story{padding-top:38px}
+.actions .button{flex-grow:1}
+}
+
 </style>
 </head>
 <body id="top">
@@ -87,33 +120,39 @@ section{padding:45px 0}.grid,.social-grid{grid-template-columns:1fr}.card{paddin
 <a class="brand" href="#top">CowboyHat<span>VR</span></a>
 <button class="menu-button" id="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu</button>
 <nav id="navigation" aria-label="Main navigation">
-<a href="#projects">What I do</a><a href="#about">About me</a><a href="#socials">Socials</a><a class="button" href="#discord">Join the community <span aria-hidden="true">↗</span></a>
+<a href="#minecraft">Minecraft</a><a href="#vr">VR & about me</a><a href="#socials">Socials</a><a class="button" href="#discord">Join the community <span aria-hidden="true">↗</span></a>
 </nav>
 </div></header>
 <main>
 <div class="wrap hero">
-<div>
-<p class="eyebrow">Minecraft · Donut SMP · Creative projects</p>
-<h1>A little building.<br>A little gaming.<br><span>Always creating.</span></h1>
-<p class="lead">Hey, I'm CowboyHatVR. I play Minecraft and Donut SMP, work on builds and farms, and share videos and projects as I go.</p>
-<div class="actions"><a class="button primary" href="https://www.youtube.com/@cowboyhatvr-real" target="_blank" rel="noopener noreferrer">Watch on YouTube <span aria-hidden="true">↗</span></a><a class="button" href="#discord">Find me on Discord</a></div>
+<div class="hero-copy">
+<p class="eyebrow">Minecraft. Gorilla Tag. Whatever I'm making next.</p>
+<h1>Hey, I'm<br><span>CowboyHatVR.</span></h1>
+<p class="lead">I play Minecraft and VR, make videos, and spend way too long figuring out how to build things. This is where you can find what I'm into and where to hang out with me.</p>
+<div class="actions"><a class="button primary" href="https://www.youtube.com/@cowboyhatvr-real" target="_blank" rel="noopener noreferrer">Watch my videos <span aria-hidden="true">↗</span></a><a class="button" href="#minecraft">A bit about me <span aria-hidden="true">↓</span></a></div>
 </div>
-<div class="profile"><img src="favicon.png" alt="CowboyHatVR's avatar wearing a cowboy hat" width="360" height="360"><div class="profile-caption"><span>CowboyHatVR</span><span>Build. Play. Share.</span></div></div>
+<!-- Add the user's approved Minecraft skin artwork here when supplied. No substitute avatar. -->
 </div>
-<section id="projects"><div class="wrap">
-<div class="section-heading"><div><p class="eyebrow">What I'm into</p><h2>From an idea<br>to something playable.</h2></div><p>Sometimes it's a Minecraft build. Sometimes it's a video, a map or a small experiment with code.</p></div>
-<div class="grid">
-<article class="card"><span class="number">01 / MINECRAFT</span><h3>Donut SMP & builds</h3><p>I play on Donut SMP and experiment with farms, building ideas and schematics. The community is a place to compare ideas, ask questions and share what we're making.</p></article>
-<article class="card"><span class="number">02 / CONTENT</span><h3>Videos & gameplay</h3><p>Gaming, things I'm trying out, and projects I want to share. You'll find my videos on YouTube, short clips on TikTok and streams on Twitch when I go live.</p></article>
-<article class="card"><span class="number">03 / CREATIVE PROJECTS</span><h3>Maps, mods & Blender</h3><p>I also like working on Gorilla Tag projects, making maps in Unity and experimenting in Blender. I learn by building things and seeing what works.</p></article>
-</div>
-</div></section>
-<section id="about"><div class="wrap about">
-<div><p class="eyebrow">Behind the username</p><h2>Still CowboyHatVR.<br>More things to make.</h2></div>
-<div><p>I started sharing Gorilla Tag and VR projects, and Minecraft is now a bigger part of what I do. I enjoy trying new tools, figuring things out and turning an idea into something I can actually use.</p><p>This is where you can find my channels and the community. For builds, questions and shared projects, come say hello on <a href="#discord">Discord</a>.</p></div>
-</div></section>
+<div class="interests wrap" aria-label="Interests"><span>MINECRAFT</span><span>DONUT SMP</span><span>GORILLA TAG</span><span>MAP MAKING</span></div>
+<section id="minecraft"><div class="wrap story">
+<div class="section-label"><span>01</span><p class="eyebrow">Minecraft</p></div>
+<div><h2>Mostly on Donut SMP.<br><span>Usually working on a farm.</span></h2>
+<p class="story-lead">Building a base, trying a farm design or finding out why something doesn't work. That's a lot of my time in Minecraft.</p>
+<p>I play on Donut SMP and like working with farms and schematics. I also mess around with mods and ideas for videos. Some things work straight away. Most take a bit more figuring out.</p>
+<div class="topic-list"><div><h3>Farms & schematics</h3><p>Trying designs, making changes and sharing builds with other players.</p></div><div><h3>Videos & experiments</h3><p>Gameplay, projects and the things I think are worth recording.</p></div></div>
+<a class="text-link" href="https://discord.gg/dyWVfz9FZY" target="_blank" rel="noopener noreferrer">Talk Minecraft on Discord ↗</a>
+</div></div></section>
+<section id="vr"><div class="wrap story vr-story">
+<div class="section-label"><span>02</span><p class="eyebrow">VR & about me</p></div>
+<div><h2>And yes,<br><span>there's still VR.</span></h2>
+<p class="story-lead">The VR in my name is there for a reason. I play Gorilla Tag and enjoy making things for it, too.</p>
+<p>I make maps in Unity, experiment with Gorilla Tag mods and work in Blender. I made a map for LT_Merch, and I like learning how to turn an idea into a place you can actually play in.</p>
+<p>Minecraft is a big part of what I do, but it hasn't replaced everything else. Sometimes I'd rather put on a headset, work on a map or try an animation.</p>
+<!-- Insert the user's existing VR portrait here once the original image is available. -->
+<a class="text-link" href="https://www.youtube.com/@cowboyhatvr-real" target="_blank" rel="noopener noreferrer">See my YouTube channel ↗</a>
+</div></div></section>
 <section id="discord"><div class="wrap"><div class="community">
-<div><p class="eyebrow">The community</p><h2>Come hang out.</h2><p>Talk Minecraft and Donut SMP, show your builds, share schematics or ask for help. There's room for the other games and projects we enjoy, too.</p><a class="button primary" href="https://discord.gg/dyWVfz9FZY" target="_blank" rel="noopener noreferrer">Join the Discord server <span aria-hidden="true">↗</span></a></div>
+<div><p class="eyebrow">The community</p><h2>Got a build to share?</h2><p>Share a build, find a schematic or just talk about the game. My Discord is where we hang out between videos, whether you play Donut SMP, Gorilla Tag or something else.</p><a class="button primary" href="https://discord.gg/dyWVfz9FZY" target="_blank" rel="noopener noreferrer">Join the Discord server <span aria-hidden="true">↗</span></a></div>
 <div class="details"><p class="detail-label">My Discord username</p><p class="handle">cowboy_hat_vr</p><a class="profile-link" href="https://discord.com/users/369571484332589057" target="_blank" rel="noopener noreferrer">View my Discord profile ↗</a></div>
 </div></div></section>
 <section id="socials"><div class="wrap">
