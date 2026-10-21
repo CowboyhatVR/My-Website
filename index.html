@@ -1,492 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CowboyHatVR</title>
-
-  <!-- favicon -->
-  <link rel="icon" type="image/png" href="favicon.png">
-
-  <style>
-    html { scroll-behavior: smooth; }
-
-    body{
-      margin:0;
-      font-family: Arial, Helvetica, sans-serif;
-      color:#fff;
-      text-align:center;
-
-      /* Glanzende blauw-zwarte achtergrond */
-      background:
-        radial-gradient(circle at 20% 20%, #0077ff33, transparent 40%),
-        radial-gradient(circle at 80% 30%, #0044ff22, transparent 40%),
-        linear-gradient(180deg,#02030a,#000000);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ===== Scrollende particles layer (beweegt mee met scroll) ===== */
-    .bg-wrap{ position: relative; min-height: 100vh; }
-
-    .particles{
-      position:absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-
-      /* langer dan pagina zodat je altijd bubbles ziet tijdens scroll */
-      min-height: 240vh;
-    }
-
-    .bubble{
-      position:absolute;
-      width:22px;
-      height:22px;
-      border-radius:50%;
-
-      background: radial-gradient(
-        circle,
-        rgba(0,150,255,0.30) 0%,
-        rgba(0,150,255,0.14) 60%,
-        rgba(0,150,255,0) 100%
-      );
-
-      border:1px solid rgba(255,255,255,0.18);
-      filter: blur(1.2px);
-      box-shadow: 0 0 26px rgba(0,150,255,0.35);
-
-      /* rustige eigen beweging */
-      animation: drift 22s ease-in-out infinite;
-
-      /* tilt transform is via CSS variables (smooth) */
-      transform: translate(var(--tx, 0px), var(--ty, 0px));
-      will-change: transform;
-    }
-
-    @keyframes drift{
-      0%   { translate: 0 0; }
-      25%  { translate: 18px -12px; }
-      50%  { translate: -14px 16px; }
-      75%  { translate: 12px 10px; }
-      100% { translate: 0 0; }
-    }
-
-    /* ===== Content boven particles ===== */
-    .content{ position: relative; z-index: 2; }
-
-    /* ===== Topbar ===== */
-    .topbar{
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-
-      display:flex;
-      align-items:center;
-      gap:10px;
-
-      padding:14px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.05);
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .btn{
-      text-decoration:none;
-      background: rgba(0,0,0,0.30);
-      border: 1px solid rgba(255,255,255,0.20);
-      color:#fff;
-      padding:10px 14px;
-      border-radius:12px;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-    }
-
-    /* ===== Hamburger (centraal) + X animatie ===== */
-    .hamburger{
-      width:44px;
-      height:40px;
-      border-radius:12px;
-      background: rgba(0,0,0,0.30);
-      border: 1px solid rgba(255,255,255,0.20);
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .hamburger .lines{
-      position:relative;
-      width:20px;
-      height:14px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      align-items:center;
-    }
-
-    .line{
-      width:20px;
-      height:2px;
-      background:white;
-      border-radius:999px;
-      transition:0.25s;
-    }
-
-    .hamburger.open .line:nth-child(1){
-      transform:translateY(6px) rotate(45deg);
-    }
-
-    .hamburger.open .line:nth-child(2){
-      opacity:0;
-    }
-
-    .hamburger.open .line:nth-child(3){
-      transform:translateY(-6px) rotate(-45deg);
-    }
-
-    /* ===== Dropdown die smooth naar beneden slidt ===== */
-    .dropdown{
-      position: fixed;
-      left: 12px;
-      top: 64px; /* wordt door JS bijgewerkt zodat hij onder de topbar blijft */
-      z-index: 1100;
-
-      width: 230px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.20);
-      background: rgba(0,0,0,0.86);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-
-      transform: translateY(-12px);
-      opacity: 0;
-      max-height: 0;
-      pointer-events: none;
-      overflow: hidden;
-
-      transition:
-        max-height .32s ease,
-        transform .32s ease,
-        opacity .22s ease;
-    }
-
-    .dropdown.open{
-      max-height: 260px;
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .dropdown a{
-      display:block;
-      padding:12px 14px;
-      text-decoration:none;
-      color:white;
-      border-bottom:1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-    }
-    .dropdown a:last-child{ border-bottom:none; }
-
-    /* Intro */
-    .center{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      height:90vh;
-      padding:20px;
-    }
-
-    h1{
-      font-size:48px;
-      margin: 0 0 20px 0;
-    }
-
-    p{
-      font-size:18px;
-      max-width:650px;
-      line-height:1.6;
-      margin:0;
-    }
-
-    /* Sections */
-    .section{
-      padding:120px 20px;
-      max-width:750px;
-      margin:auto;
-      scroll-margin-top:110px;
-    }
-
-    .card{
-      background:
-        radial-gradient(circle at 20% 20%, #0077ff33, transparent 40%),
-        radial-gradient(circle at 80% 30%, #0044ff22, transparent 40%),
-        linear-gradient(180deg,#02030a,#000000);
-
-      border:1px solid rgba(255,255,255,0.14);
-      border-radius:20px;
-      padding:30px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .discord-buttons{
-      margin-top:20px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      align-items:center;
-    }
-
-    .socials{
-      margin-top:18px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      align-items:center;
-    }
-
-    footer{
-      margin-top:60px;
-      padding:20px;
-      font-size:14px;
-      color: rgba(255,255,255,0.60);
-    }
-
-    /* iOS motion permission button (alleen zichtbaar als nodig) */
-    .motion-btn{
-      position: fixed;
-      right: 12px;
-      bottom: 12px;
-      z-index: 1200;
-      display:none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#e5f5ff">
+<meta name="description" content="CowboyHatVR: Minecraft, Donut SMP, builds and creative projects. Watch my videos and join the community.">
+<title>CowboyHatVR | Minecraft & creative projects</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+:root{--ink:#18394d;--muted:#496879;--blue:#126a9f;--line:#c9e2ee;--white:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(165deg,#ccecff 0%,#e6f6ff 18%,#fff 39%,#edf9ff 61%,#d5efff 80%,#fff 100%);line-height:1.65}
+a{color:inherit}button{font:inherit}
+.wrap{width:min(1100px,calc(100% - 48px));margin:auto}
+header{position:sticky;top:0;z-index:10;background:rgba(247,252,255,.9);border-bottom:1px solid rgba(161,202,225,.4);backdrop-filter:blur(18px)}
+.navbar{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{text-decoration:none;font-size:19px;font-weight:800;letter-spacing:-.6px;white-space:nowrap}
+.brand span{color:var(--blue)}
+nav{display:flex;align-items:center;gap:26px}
+nav a{text-decoration:none;font-size:14px;font-weight:700}
+nav a:hover{color:var(--blue)}
+.menu-button{display:none;border:1px solid var(--line);background:white;color:var(--ink);border-radius:10px;padding:8px 14px;cursor:pointer}
+.hero{padding:108px 0 84px;min-height:650px;display:grid;grid-template-columns:1.35fr .65fr;align-items:center;gap:65px}
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:800;color:var(--blue);margin:0 0 22px}
+h1{font-size:clamp(44px,6.4vw,76px);line-height:1.07;letter-spacing:-3px;margin:0 0 28px;font-weight:800}
+h1 span{color:var(--blue)}
+.lead{font-size:19px;max-width:550px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.button{display:inline-flex;justify-content:center;align-items:center;gap:16px;min-height:48px;padding:12px 21px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.8);font-size:14px;font-weight:700;text-decoration:none;transition:transform .2s,background .2s}
+.button:hover{transform:translateY(-2px);background:white}
+.button.primary{background:var(--blue);color:white;border-color:var(--blue)}
+.button.primary:hover{background:#0d5682}
+.profile{position:relative;padding:18px;background:rgba(255,255,255,.65);border:1px solid white;border-radius:32px;box-shadow:0 24px 65px rgba(47,119,157,.12);transform:rotate(3deg)}
+.profile img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:21px}
+.profile-caption{display:flex;align-items:center;justify-content:space-between;padding:18px 5px 2px;font-size:13px;font-weight:700}
+.profile-caption span:last-child{color:var(--blue)}
+section{padding:72px 0}
+.section-heading{display:flex;justify-content:space-between;align-items:end;gap:35px;margin-bottom:30px}
+h2{font-size:clamp(30px,4vw,44px);letter-spacing:-1.5px;line-height:1.15;margin:0 0 18px}
+h3{font-size:22px;line-height:1.3;letter-spacing:-.5px;margin:16px 0 12px}
+p{margin:0 0 16px}
+.section-heading p{max-width:420px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{padding:30px;background:rgba(255,255,255,.73);border:1px solid rgba(172,211,231,.65);border-radius:22px}
+.card .number{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:1px}
+.card p{font-size:15px;color:var(--muted);margin-bottom:0}
+.about{display:grid;grid-template-columns:1fr 1.2fr;gap:70px;padding:38px 0}
+.about p{color:var(--muted);font-size:17px}
+.about a{color:var(--blue);text-underline-offset:4px}
+.community{padding:54px;border-radius:28px;background:linear-gradient(120deg,rgba(255,255,255,.95),#d8effc);border:1px solid white;display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:center;box-shadow:0 14px 50px rgba(46,118,156,.06)}
+.community p{color:var(--muted);max-width:570px}
+.community .details{border-left:1px solid #b4d8ec;padding-left:32px}
+.detail-label{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700}
+.handle{font-size:20px;font-weight:700;overflow-wrap:anywhere}
+.profile-link{font-size:14px;color:var(--blue);text-underline-offset:4px}
+.social-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.social-link{padding:24px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.65);text-decoration:none;display:flex;gap:14px;align-items:center;transition:background .2s,transform .2s}
+.social-link:hover{background:white;transform:translateY(-3px)}
+.social-icon{width:38px;height:38px;display:grid;place-items:center;background:#e5f3fc;border-radius:10px;color:var(--blue);font-weight:800;flex-shrink:0}
+.social-link strong{display:block;font-size:16px}
+.social-link small{display:block;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.social-link .arrow{margin-left:auto}
+.more{margin-top:22px;font-size:14px;color:var(--muted)}
+.more a{color:var(--blue);text-underline-offset:4px}
+footer{padding:30px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.footer-inner{display:flex;justify-content:space-between;gap:20px}
+footer a{text-underline-offset:4px}
+:focus-visible{outline:3px solid #117db5;outline-offset:5px}
+@media(max-width:760px){
+.wrap{width:calc(100% - 36px)}.navbar{min-height:68px}.menu-button{display:block}
+nav{position:absolute;top:68px;left:0;right:0;padding:22px;background:#f4fbff;border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:18px}
+nav[hidden]{display:none}
+.hero{padding:65px 0 40px;grid-template-columns:1fr;gap:40px;min-height:0}
+h1{letter-spacing:-2px}.lead{font-size:17px}.profile{width:min(280px,85%);justify-self:center;transform:rotate(2deg)}
+section{padding:45px 0}.grid,.social-grid{grid-template-columns:1fr}.card{padding:25px}
+.section-heading{display:block}.about{grid-template-columns:1fr;gap:8px;padding:0}
+.community{padding:28px;grid-template-columns:1fr;gap:20px}.community .details{border-left:0;border-top:1px solid #b4d8ec;padding:24px 0 0}
+.footer-inner{flex-direction:column;gap:6px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+</style>
 </head>
-
-<body>
-  <div class="bg-wrap">
-
-    <!-- particles (scrollt mee met pagina) -->
-    <div class="particles" id="particles"></div>
-
-    <div class="content">
-      <!-- Topbar -->
-      <div class="topbar" id="topbar">
-        <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
-          <span class="lines" aria-hidden="true">
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
-          </span>
-        </button>
-
-        <a class="btn" href="#about" onclick="closeMenu()">About me</a>
-        <a class="btn" href="#discord" onclick="closeMenu()">My Discord</a>
-        <a class="btn" href="https://linktr.ee/cowboyhatvr" target="_blank" rel="noopener" onclick="closeMenu()">Linktree</a>
-      </div>
-
-      <!-- Dropdown (slides down smoothly) -->
-      <div id="menu" class="dropdown" aria-label="Menu links">
-        <a href="#about" onclick="closeMenu()">About me</a>
-        <a href="#discord" onclick="closeMenu()">My Discord</a>
-        <a href="https://linktr.ee/cowboyhatvr" target="_blank" rel="noopener" onclick="closeMenu()">Linktree</a>
-      </div>
-
-      <!-- Intro -->
-      <div class="center">
-        <h1>CowboyHatVR</h1>
-        <p>
-          Reject Humanity, Accept Monkey,
-          <br>
-          Become Cowboy 🤠
-          <br><br>
-          Just A CowboyHat🤠🔛🔝
-          <br>
-          Gorilla Tag Coder👨‍💻
-          <br>
-          Map Maker🗺️📍
-          <br>
-          Blender Artist 🟠⚪
-          <br>
-          And chill guy🗿
-        </p>
-      </div>
-
-      <!-- About -->
-      <div id="about" class="section">
-        <div class="card">
-          <h2>About Me</h2>
-          <p>
-            Gorilla Tag modder, I make unnecessary legal mods to learn and share with the community.
-            I also make maps in unity, I even made a map for LT_Merch.
-            I work with Blender, and love to create animations.
-            I create VR content and hang out with the community.
-          </p>
-
-          <div class="socials">
-            <a class="btn" href="https://linktr.ee/cowboyhatvr" target="_blank" rel="noopener">Socials: Linktree</a>
-            <a class="btn" href="#discord">Socials: Discord</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Discord -->
-      <div id="discord" class="section">
-        <div class="card">
-          <h2>Discord</h2>
-          <p>Discord username: cowboy_hat_vr</p>
-
-          <div class="discord-buttons">
-            <a class="btn" href="https://discord.com/users/369571484332589057" target="_blank" rel="noopener">My Profile</a>
-            <a class="btn" href="https://discord.gg/Qsp7Hfq6A" target="_blank" rel="noopener">My Discord</a>
-            <a class="btn" href="https://discord.gg/csty99p5AS" target="_blank" rel="noopener">My Clan</a>
-          </div>
-        </div>
-      </div>
-
-      <footer>© CowboyHatVR 2026 All Rights Reserved</footer>
-    </div>
-  </div>
-
-  <!-- iOS motion permission (alleen als nodig) -->
-  <button class="btn motion-btn" id="motionBtn">Enable Motion</button>
-
-  <script>
-    /* ===== Menu logic ===== */
-    function setMenuTop() {
-      const topbar = document.getElementById("topbar");
-      const menu = document.getElementById("menu");
-      const h = topbar.getBoundingClientRect().height;
-      menu.style.top = (Math.round(h) + 8) + "px";
-    }
-
-    function toggleMenu(){
-      const menu = document.getElementById("menu");
-      const burger = document.getElementById("hamburger");
-
-      const isOpen = menu.classList.contains("open");
-
-      if(isOpen){
-        menu.classList.remove("open");
-        burger.classList.remove("open");
-      } else {
-        setMenuTop();
-        menu.classList.add("open");
-        burger.classList.add("open");
-      }
-    }
-
-    function closeMenu(){
-      document.getElementById("menu").classList.remove("open");
-      document.getElementById("hamburger").classList.remove("open");
-    }
-
-    window.addEventListener("resize", () => {
-      const menu = document.getElementById("menu");
-      if(menu.classList.contains("open")) setMenuTop();
-    });
-
-    window.addEventListener("scroll", () => {
-      const menu = document.getElementById("menu");
-      if(menu.classList.contains("open")) setMenuTop();
-    });
-
-    /* ===== Bubbles: minder + scrollen mee (container is absolute) ===== */
-    const particleContainer = document.getElementById("particles");
-    const bubbles = [];
-    const BUBBLE_COUNT = 18; // minder belletjes
-
-    function makeBubbles(){
-      particleContainer.innerHTML = "";
-      bubbles.length = 0;
-
-      for(let i=0;i<BUBBLE_COUNT;i++){
-        const b = document.createElement("div");
-        b.className = "bubble";
-
-        // verspreid over breedte + over 240vh hoogte
-        b.style.left = (Math.random() * 100) + "%";
-        b.style.top  = (Math.random() * 240) + "vh";
-
-        // kleine variatie in grootte
-        const size = 18 + Math.random() * 10;
-        b.style.width = size + "px";
-        b.style.height = size + "px";
-
-        // kleine variatie in tempo (ziet natuurlijker)
-        const dur = 18 + Math.random() * 10; // 18s - 28s
-        b.style.animationDuration = dur + "s";
-
-        particleContainer.appendChild(b);
-        bubbles.push(b);
-      }
-    }
-    makeBubbles();
-
-    /* ===== Tilt: iets meer bewegen + smooth ===== */
-    let targetX = 0, targetY = 0;
-    let curX = 0, curY = 0;
-
-    function applyTilt(){
-      // smoothing
-      curX += (targetX - curX) * 0.12;
-      curY += (targetY - curY) * 0.12;
-
-      for(const b of bubbles){
-        b.style.setProperty("--tx", curX + "px");
-        b.style.setProperty("--ty", curY + "px");
-      }
-      requestAnimationFrame(applyTilt);
-    }
-    requestAnimationFrame(applyTilt);
-
-    function onOrientation(e){
-      const gamma = (typeof e.gamma === "number") ? e.gamma : 0; // left/right
-      const beta  = (typeof e.beta === "number") ? e.beta : 0;   // up/down
-
-      // meer movement dan eerst
-      targetX = gamma * 2.2; // was lager
-      targetY = beta  * 1.2;
-    }
-
-    // iOS permission support
-    const motionBtn = document.getElementById("motionBtn");
-
-    async function enableMotion(){
-      try{
-        if (typeof DeviceOrientationEvent !== "undefined" &&
-            typeof DeviceOrientationEvent.requestPermission === "function"){
-          const res = await DeviceOrientationEvent.requestPermission();
-          if(res === "granted"){
-            window.addEventListener("deviceorientation", onOrientation, true);
-            motionBtn.style.display = "none";
-          }
-        } else {
-          window.addEventListener("deviceorientation", onOrientation, true);
-          motionBtn.style.display = "none";
-        }
-      } catch(err){
-        // als het faalt, probeer toch te luisteren
-        window.addEventListener("deviceorientation", onOrientation, true);
-        motionBtn.style.display = "none";
-      }
-    }
-
-    // auto proberen (Android), iOS vraagt vaak klik:
-    if (typeof DeviceOrientationEvent !== "undefined" &&
-        typeof DeviceOrientationEvent.requestPermission === "function"){
-      motionBtn.style.display = "inline-flex";
-      motionBtn.addEventListener("click", enableMotion);
-    } else {
-      enableMotion();
-    }
-  </script>
+<body id="top">
+<header><div class="navbar wrap">
+<a class="brand" href="#top">CowboyHat<span>VR</span></a>
+<button class="menu-button" id="menu-toggle" aria-expanded="false" aria-controls="navigation">Menu</button>
+<nav id="navigation" aria-label="Main navigation">
+<a href="#projects">What I do</a><a href="#about">About me</a><a href="#socials">Socials</a><a class="button" href="#discord">Join the community <span aria-hidden="true">↗</span></a>
+</nav>
+</div></header>
+<main>
+<div class="wrap hero">
+<div>
+<p class="eyebrow">Minecraft · Donut SMP · Creative projects</p>
+<h1>A little building.<br>A little gaming.<br><span>Always creating.</span></h1>
+<p class="lead">Hey, I'm CowboyHatVR. I play Minecraft and Donut SMP, work on builds and farms, and share videos and projects as I go.</p>
+<div class="actions"><a class="button primary" href="https://www.youtube.com/@cowboyhatvr-real" target="_blank" rel="noopener noreferrer">Watch on YouTube <span aria-hidden="true">↗</span></a><a class="button" href="#discord">Find me on Discord</a></div>
+</div>
+<div class="profile"><img src="favicon.png" alt="CowboyHatVR's avatar wearing a cowboy hat" width="360" height="360"><div class="profile-caption"><span>CowboyHatVR</span><span>Build. Play. Share.</span></div></div>
+</div>
+<section id="projects"><div class="wrap">
+<div class="section-heading"><div><p class="eyebrow">What I'm into</p><h2>From an idea<br>to something playable.</h2></div><p>Sometimes it's a Minecraft build. Sometimes it's a video, a map or a small experiment with code.</p></div>
+<div class="grid">
+<article class="card"><span class="number">01 / MINECRAFT</span><h3>Donut SMP & builds</h3><p>I play on Donut SMP and experiment with farms, building ideas and schematics. The community is a place to compare ideas, ask questions and share what we're making.</p></article>
+<article class="card"><span class="number">02 / CONTENT</span><h3>Videos & gameplay</h3><p>Gaming, things I'm trying out, and projects I want to share. You'll find my videos on YouTube, short clips on TikTok and streams on Twitch when I go live.</p></article>
+<article class="card"><span class="number">03 / CREATIVE PROJECTS</span><h3>Maps, mods & Blender</h3><p>I also like working on Gorilla Tag projects, making maps in Unity and experimenting in Blender. I learn by building things and seeing what works.</p></article>
+</div>
+</div></section>
+<section id="about"><div class="wrap about">
+<div><p class="eyebrow">Behind the username</p><h2>Still CowboyHatVR.<br>More things to make.</h2></div>
+<div><p>I started sharing Gorilla Tag and VR projects, and Minecraft is now a bigger part of what I do. I enjoy trying new tools, figuring things out and turning an idea into something I can actually use.</p><p>This is where you can find my channels and the community. For builds, questions and shared projects, come say hello on <a href="#discord">Discord</a>.</p></div>
+</div></section>
+<section id="discord"><div class="wrap"><div class="community">
+<div><p class="eyebrow">The community</p><h2>Come hang out.</h2><p>Talk Minecraft and Donut SMP, show your builds, share schematics or ask for help. There's room for the other games and projects we enjoy, too.</p><a class="button primary" href="https://discord.gg/dyWVfz9FZY" target="_blank" rel="noopener noreferrer">Join the Discord server <span aria-hidden="true">↗</span></a></div>
+<div class="details"><p class="detail-label">My Discord username</p><p class="handle">cowboy_hat_vr</p><a class="profile-link" href="https://discord.com/users/369571484332589057" target="_blank" rel="noopener noreferrer">View my Discord profile ↗</a></div>
+</div></div></section>
+<section id="socials"><div class="wrap">
+<p class="eyebrow">Stay connected</p><h2>Find me here.</h2>
+<div class="social-grid">
+<a class="social-link" href="https://www.youtube.com/@cowboyhatvr-real" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true">▶</span><span><strong>YouTube</strong><small>@cowboyhatvr-real</small></span><span class="arrow" aria-hidden="true">↗</span></a>
+<a class="social-link" href="https://www.tiktok.com/@cowboy_hat_vr" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true">♪</span><span><strong>TikTok</strong><small>@cowboy_hat_vr</small></span><span class="arrow" aria-hidden="true">↗</span></a>
+<a class="social-link" href="https://www.twitch.tv/cowboy_hat_vr1" target="_blank" rel="noopener noreferrer"><span class="social-icon" aria-hidden="true">▹</span><span><strong>Twitch</strong><small>cowboy_hat_vr1</small></span><span class="arrow" aria-hidden="true">↗</span></a>
+</div>
+<p class="more">All my links: <a href="https://linktr.ee/cowboyhatvr" target="_blank" rel="noopener noreferrer">linktr.ee/cowboyhatvr</a></p>
+</div></section>
+</main>
+<footer><div class="wrap footer-inner"><span>© 2026 CowboyHatVR</span><a href="#top">Back to top ↑</a></div></footer>
+<script>
+const toggle=document.getElementById('menu-toggle');
+const nav=document.getElementById('navigation');
+const mobile=window.matchMedia('(max-width:760px)');
+function closeMenu(){toggle.setAttribute('aria-expanded','false');nav.hidden=mobile.matches;}
+toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));nav.hidden=!open;});
+nav.addEventListener('click',event=>{if(event.target.closest('a'))closeMenu();});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&mobile.matches&&toggle.getAttribute('aria-expanded')==='true'){closeMenu();toggle.focus();}});
+document.addEventListener('click',event=>{if(!event.target.closest('header'))closeMenu();});
+mobile.addEventListener('change',closeMenu);
+closeMenu();
+</script>
 </body>
 </html>
